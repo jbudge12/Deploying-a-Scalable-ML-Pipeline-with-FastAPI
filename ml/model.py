@@ -1,7 +1,8 @@
 import pickle
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from ml.data import process_data
-# TODO: add necessary import
+# TODO: add necessary import - see import from data.py
+from sklearn.linear_model import LogisticRegression
 
 # Optional: implement hyperparameter tuning.
 def train_model(X_train, y_train):
@@ -20,7 +21,7 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
     # TODO: implement the function
-    pass
+    model = LogisticRegression()
 
 
 def compute_model_metrics(y, preds):
@@ -60,7 +61,7 @@ def inference(model, X):
         Predictions from the model.
     """
     # TODO: implement the function
-    pass
+    preds = model.predict(X)
 
 def save_model(model, path):
     """ Serializes model to a file.
@@ -73,12 +74,14 @@ def save_model(model, path):
         Path to save pickle file.
     """
     # TODO: implement the function
-    pass
+    with open(path, 'wb') as file: 
+        pickle.dump(model, file)
 
 def load_model(path):
     """ Loads pickle file from `path` and returns it."""
     # TODO: implement the function
-    pass
+    with open(path, 'rb') as file: # read
+        return pickle.load(file)
 
 
 def performance_on_categorical_slice(
@@ -121,7 +124,14 @@ def performance_on_categorical_slice(
     X_slice, y_slice, _, _ = process_data(
         # your code here
         # for input data, use data in column given as "column_name", with the slice_value 
-        # use training = False
+        # use training = False; if false it indicates use for inference or validation
+        # label=label, etc ? see train_model.py,label="salary"
+        data_slice,
+        categorical_features=categorical_features,
+        label="salary",
+        encoder=encoder,
+        lb=lb,
+        training=False
     )
     preds = None # your code here to get prediction on X_slice using the inference function
     precision, recall, fbeta = compute_model_metrics(y_slice, preds)
